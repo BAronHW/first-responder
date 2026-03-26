@@ -51,6 +51,7 @@ deny = [
     "winter",
     "chief",
     "officer",
+    "trainer",
 ]
 
 
