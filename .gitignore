@@ -12,3 +12,7 @@ wheels/
 
 # Environment variables
 .env
+
+# Markdown files
+markdown/JOBS_TEMP.md
+markdown/JOBS.md
