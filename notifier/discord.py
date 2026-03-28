@@ -25,8 +25,8 @@ def notify(job_list: list) -> None:
                 json={
                     "embeds": [
                         {
-                            "title": f"{job['company']}",
-                            "description": f"[{job['title']}]({job['link']})",
+                            "title": f"🎯 New Job Found!",
+                            "description": f"**{job['company']}**\n[{job['title']}]({job['link']})",
                         }
                     ]
                 },
