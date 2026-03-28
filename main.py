@@ -1,5 +1,7 @@
+import os
 from notifier.discord import notify
 from scrapers import workday, ashby, greenhouse
+from database import create_db
 
 # import importlib
 import sqlite3
@@ -7,6 +9,9 @@ import time
 import datetime
 
 start_time = time.perf_counter()
+
+if not os.path.exists("database/JOBS.db"):
+    create_db()
 
 con = sqlite3.connect("database/JOBS.db")
 cursor = con.cursor()
