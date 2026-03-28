@@ -34,7 +34,7 @@ jobs:
 
       - name: Run scraper
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK }}
         run: uv run python main.py
 
       - name: Commit and push changes
