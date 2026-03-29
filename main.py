@@ -2,7 +2,6 @@ import os
 from dotenv import load_dotenv
 from notifier.discord import notify
 from scrapers import workday, ashby, greenhouse
-from database import create_db
 
 # import importlib
 import psycopg
@@ -13,9 +12,6 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 start_time = time.perf_counter()
-
-if not os.path.exists("database/JOBS.db"):
-    create_db()
 
 con = psycopg.connect(DATABASE_URL)
 cursor = con.cursor()
