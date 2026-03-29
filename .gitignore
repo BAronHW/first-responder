@@ -14,5 +14,5 @@ wheels/
 .env
 
 # Markdown files
-markdown/JOBS_TEMP.md
-markdown/JOBS.md
+markdown/COMPANIES_TEMP.md
+markdown/COMPANIES.md
