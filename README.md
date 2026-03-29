@@ -7,6 +7,8 @@ There are lots of plans in the works to make this even better, so right now Firs
 
 If you want to see my plans for the future, check out the bottom of this README for a better look!
 
+If you are a non-technical user and think you will be confused about everything below, check out the [instructions for non-technical users](markdown/NON_TECHNICAL_INSTRUCTIONS.md), as I explain a **lot** of information in it.
+
 # Setup
 Before setting up the environment variables, let's first change some of the file names.
 
