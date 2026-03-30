@@ -122,7 +122,7 @@ Make sure to set secrets:
 
 ---
 
-## ⭐️ Future Plans
+## Future Plans
 
 * Smarter filtering using an LLM (job description matching)
 * SMS notifications (Twilio)
