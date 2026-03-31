@@ -19,7 +19,9 @@ cursor = con.cursor()
 seen_available = True
 
 try:
-    cursor.execute('DELETE FROM seen WHERE "date"::date < CURRENT_DATE - INTERVAL \'2 months\'')
+    cursor.execute(
+        "DELETE FROM seen WHERE \"date\"::date < CURRENT_DATE - INTERVAL '2 months'"
+    )
     cursor.execute("SELECT company, title, link FROM seen")
     seen_rows = cursor.fetchall()
     seen_keys = {(company, title, link) for company, title, link in seen_rows}
@@ -68,7 +70,7 @@ else:
 
         new_jobs.append(job)
         cursor.execute(
-            'INSERT INTO seen (company, title, link, date) VALUES (%s, %s, %s, %s)',
+            "INSERT INTO seen (company, title, link, date) VALUES (%s, %s, %s, %s)",
             (job["company"], job["title"], job["link"], today),
         )
         seen_keys.add(key)
