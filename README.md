@@ -68,11 +68,11 @@ CREATE TABLE seen (
 
 ### 5. Add Environment Variables
 
-Add to the `.env` file:
+Add the db connection string and webhook URL to the `.env` file:
 
 ```env
-DISCORD_WEBHOOK = ""
-DATABASE_URL = ""
+DISCORD_WEBHOOK = "YOUR_URL"
+DATABASE_URL = "YOUR_CONNECTION_STRING"
 ```
 
 Do the same for GitHub Action Secrets:
