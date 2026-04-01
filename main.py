@@ -15,29 +15,28 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 
 start_time = time.perf_counter()
 
-con = psycopg.connect(DATABASE_URL)
-cursor = con.cursor()
+with psycopg.connect(DATABASE_URL) as con:
+    with con.cursor() as cursor:
+        seen_available = True
 
-seen_available = True
+        try:
+            cursor.execute(
+                "DELETE FROM seen WHERE \"date\"::date < CURRENT_DATE - INTERVAL '2 months'"
+            )
+            cursor.execute("SELECT company, title, link FROM seen")
+            seen_rows = cursor.fetchall()
+            seen_keys = {(company, title, link) for company, title, link in seen_rows}
+        except psycopg.OperationalError:
+            seen_available = False
+            seen_keys = set()
 
-try:
-    cursor.execute(
-        "DELETE FROM seen WHERE \"date\"::date < CURRENT_DATE - INTERVAL '2 months'"
-    )
-    cursor.execute("SELECT company, title, link FROM seen")
-    seen_rows = cursor.fetchall()
-    seen_keys = {(company, title, link) for company, title, link in seen_rows}
-except psycopg.OperationalError:
-    seen_available = False
-    seen_keys = set()
+        cursor.execute("SELECT * FROM companies")
 
-cursor.execute("SELECT * FROM companies")
+        rows = cursor.fetchall()
+        column_names = [description[0] for description in cursor.description]
 
-rows = cursor.fetchall()
-column_names = [description[0] for description in cursor.description]
-
-companies = [dict(zip(column_names, row)) for row in rows]
-# companies = companies[0:1]
+        companies = [dict(zip(column_names, row)) for row in rows]
+        # companies = companies[0:1]
 
 print("[START] Beginning job scraper.")
 
@@ -110,14 +109,15 @@ async def main_async():
                 continue
 
             new_jobs.append(job)
-            cursor.execute(
-                "INSERT INTO seen (company, title, link, date) VALUES (%s, %s, %s, %s)",
-                (job["company"], job["title"], job["link"], today),
-            )
             seen_keys.add(key)
 
-    con.commit()
-    con.close()
+    if new_jobs:
+        with psycopg.connect(DATABASE_URL) as con:
+            with con.cursor() as cursor:
+                cursor.executemany(
+                    "INSERT INTO seen (company, title, link, date) VALUES (%s, %s, %s, %s)",
+                    [(j["company"], j["title"], j["link"], today) for j in new_jobs],
+                )
 
     notify(new_jobs)
 
