@@ -92,8 +92,8 @@ async def main():
 
 
 if __name__ == "__main__":
-    print("[START] Beginning job scraper.")
+    print("[START] Beginning scraper.")
     start = time.perf_counter()
     asyncio.run(main())
     print(f"[TIME] Ran in {time.perf_counter() - start:.2f} seconds.")
-    print("[DONE] Ending job scraper.")
+    print("[DONE] Ending scraper.")
