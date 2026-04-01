@@ -29,6 +29,8 @@ First Responder is a lightweight job scraper that monitors company career pages 
 
 ## Quick Start
 
+If you get stuck at all, check out the [docs](docs/) for more information.
+
 ### 1. Fork & Clone
 
 Fork this repo, then clone your fork.
