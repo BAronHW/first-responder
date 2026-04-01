@@ -37,7 +37,7 @@ Fork this repo, then clone your fork.
 
 ```bash
 git mv .env.example .env
-git mv markdown/COMPANIES_TEMPLATE.md markdown/COMPANIES.md
+git mv docs/COMPANIES_TEMPLATE.md docs/COMPANIES.md
 ```
 
 ### 3. Setup Database ([Neon](https://neon.com))
@@ -107,7 +107,7 @@ filter/filters.py
 
 ## Adding Companies
 
-Use `markdown/COMPANIES.md` to track company career pages.
+Use `docs/COMPANIES.md` to track company career pages.
 
 Quick ways to find them:
 
