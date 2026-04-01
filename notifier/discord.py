@@ -17,7 +17,7 @@ def notify(job_list: list) -> None:
     print(f"[DEBUG] Notification function received {len(job_list)} jobs.")
 
     if len(job_list) == 0:
-        print("[SKIP] No jobs sent because no jobs found.")
+        print("[SKIP] No new jobs found.")
     else:
         for job in job_list:
             requests.post(
@@ -31,6 +31,6 @@ def notify(job_list: list) -> None:
                     ]
                 },
             )
-            time.sleep(0.4)
+            time.sleep(0.4)  # To avoid hitting rate limits
 
         print("[NOTIFICATION] Sent new jobs to Discord.")
