@@ -52,6 +52,12 @@ async def _run_scraper(func, company_name, link):
     return await asyncio.to_thread(func, company_name, link)
 
 
+SEMAPHORE = asyncio.Semaphore(3)  # tune as needed
+
+async def _bounded(coro):
+    async with SEMAPHORE:
+        return await coro
+
 async def _gather_all_jobs(companies):
     tasks = []
     for company in companies:
@@ -59,19 +65,19 @@ async def _gather_all_jobs(companies):
         if typ == "workday":
             tasks.append(
                 asyncio.create_task(
-                    _run_scraper(workday.scrape, company["company"], company["link"])
+                    _bounded(_run_scraper(workday.scrape, company["company"], company["link"]))
                 )
             )
         elif typ == "ashby":
             tasks.append(
                 asyncio.create_task(
-                    _run_scraper(ashby.scrape, company["company"], company["link"])
+                    _bounded(_run_scraper(ashby.scrape, company["company"], company["link"]))
                 )
             )
         elif typ == "greenhouse":
             tasks.append(
                 asyncio.create_task(
-                    _run_scraper(greenhouse.scrape, company["company"], company["link"])
+                    _bounded(_run_scraper(greenhouse.scrape, company["company"], company["link"]))
                 )
             )
         elif typ in ("hackernews", "custom"):
