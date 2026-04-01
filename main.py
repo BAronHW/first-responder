@@ -6,6 +6,7 @@ import psycopg
 from dotenv import load_dotenv
 from scrapers import workday, ashby, greenhouse
 from notifier.discord import notify
+from playwright.async_api import async_playwright
 
 load_dotenv()
 
@@ -18,32 +19,39 @@ SCRAPER_MAP = {
 SEMAPHORE = asyncio.Semaphore(4)
 
 
-async def run_scraper(scraper, company_name, link):
+async def run_scraper(scraper, company_name, link, context):
     async with SEMAPHORE:
-        return await scraper(company_name, link)
+        return await scraper(company_name, link, context)
 
 
 async def gather_all_jobs(companies):
-    tasks = [
-        asyncio.create_task(
-            run_scraper(SCRAPER_MAP[c["type"]], c["company"], c["link"])
-        )
-        for c in companies
-        if c["type"] in SCRAPER_MAP
-    ]
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context()
 
-    if not tasks:
-        return []
+        tasks = [
+            asyncio.create_task(
+                run_scraper(SCRAPER_MAP[c["type"]], c["company"], c["link"], context)
+            )
+            for c in companies
+            if c["type"] in SCRAPER_MAP
+        ]
 
-    found = []
-    for res in await asyncio.gather(*tasks, return_exceptions=True):
-        if isinstance(res, Exception):
-            print(f"[ERROR] Scraper failed: {res}")
-        elif isinstance(res, list):
-            found.extend(res)
-        else:
-            print(f"[WARN] Unexpected scraper return type: {type(res)}")
-    return found
+        if not tasks:
+            return []
+
+        found = []
+        for res in await asyncio.gather(*tasks, return_exceptions=True):
+            if isinstance(res, Exception):
+                print(f"[ERROR] Scraper failed: {res}")
+            elif isinstance(res, list):
+                found.extend(res)
+            else:
+                print(f"[WARN] Unexpected scraper return type: {type(res)}")
+        return found
+
+    await context.close()
+    await browser.close()
 
 
 async def main():
