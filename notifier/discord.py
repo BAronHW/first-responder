@@ -29,4 +29,10 @@ def notify(job_list: list) -> None:
             )
             time.sleep(0.4)  # To avoid hitting rate limits
 
-        print("[NOTIFICATION] Sent new jobs to Discord.")
+
+        num_jobs = len(job_list)
+        
+        if num_jobs == 1:
+            print("[NOTIFICATION] Sent 1 new job to Discord.")
+        else:
+            print(f"[NOTIFICATION] Sent {num_jobs} new jobs to Discord.")
