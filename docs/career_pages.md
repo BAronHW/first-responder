@@ -106,7 +106,6 @@ These are companies I have in my database to scrape, but the links below are the
 - [Reddit](https://job-boards.greenhouse.io/reddit)
 - [GitLab](https://job-boards.greenhouse.io/gitlab)
 - [NPR](https://job-boards.greenhouse.io/nationalpublicradioinc)
-- [Grammarly](https://job-boards.greenhouse.io/grammarly)
 - [dbt Labs](https://job-boards.greenhouse.io/dbtlabsinc)
 - [Zynga](https://job-boards.greenhouse.io/zyngacareers)
 - [Google](https://www.google.com/about/careers/applications/jobs/results/)
