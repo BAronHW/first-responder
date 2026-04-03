@@ -13,15 +13,15 @@ async def scrape(company: str, link: str, context) -> list:
 
         try:
             await page.wait_for_selector(
-                'a[data-automation-id="jobTitle"]', timeout=4000
+                "a[data-automation-id='jobTitle']", timeout=4000
             )
         except:
             await page.reload(wait_until="domcontentloaded")
             await page.wait_for_selector(
-                'a[data-automation-id="jobTitle"]', timeout=4000
+                "a[data-automation-id='jobTitle']", timeout=4000
             )
 
-        jobs_locator = page.locator('a[data-automation-id="jobTitle"]')
+        jobs_locator = page.locator("a[data-automation-id='jobTitle']")
 
         titles = await jobs_locator.all_inner_texts()
         links = await jobs_locator.evaluate_all(
