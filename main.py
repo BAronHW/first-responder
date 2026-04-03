@@ -4,56 +4,59 @@ import datetime
 import time
 import psycopg
 from dotenv import load_dotenv
-from scrapers import workday, ashby, greenhouse
+from scrapers.scraper import scrape
 from notifier.discord import notify
 from playwright.async_api import async_playwright
 
 load_dotenv()
 
-SCRAPER_MAP = {
-    "workday": workday.scrape,
-    "ashby": ashby.scrape,
-    "greenhouse": greenhouse.scrape,
-}
-
 SEMAPHORE = asyncio.Semaphore(4)
 
 
-async def run_scraper(scraper, company_name, link, context):
+async def run_scraper(company, context):
     async with SEMAPHORE:
-        return await scraper(company_name, link, context)
+        return await scrape(
+            company["company"],
+            company["link"],
+            company["jobs_el"],
+            company["titles_el"],
+            company["links_el"],
+            context,
+        )
 
 
 async def gather_all_jobs(companies):
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         context = await browser.new_context()
+        try:
+            tasks = [
+                asyncio.create_task(run_scraper(c, context))
+                for c in companies
+            ]
 
-        tasks = [
-            asyncio.create_task(
-                run_scraper(
-                    SCRAPER_MAP[c["platform"]], c["company"], c["link"], context
-                )
-            )
-            for c in companies
-            if c["platform"] in SCRAPER_MAP
-        ]
+            if not tasks:
+                return []
 
-        if not tasks:
-            return []
-
-        found = []
-        for res in await asyncio.gather(*tasks, return_exceptions=True):
-            if isinstance(res, Exception):
-                print(f"[ERROR] Scraper failed: {res}")
-            elif isinstance(res, list):
-                found.extend(res)
-            else:
-                print(f"[WARN] Unexpected scraper return type: {type(res)}")
-        return found
-
-    await context.close()
-    await browser.close()
+            found = []
+            for res in await asyncio.gather(*tasks, return_exceptions=True):
+                if isinstance(res, Exception):
+                    print(f"[ERROR] Scraper failed: {res}")
+                elif isinstance(res, list):
+                    found.extend(res)
+                else:
+                    print(f"[WARN] Unexpected scraper return type: {type(res)}")
+            return found
+        finally:
+            # Always attempt to close context and browser
+            try:
+                await context.close()
+            except Exception:
+                pass
+            try:
+                await browser.close()
+            except Exception:
+                pass
 
 
 async def main():
@@ -67,7 +70,14 @@ async def main():
         )
         cursor.execute("SELECT company, title, link FROM seen")
         seen_keys = {(r["company"], r["title"], r["link"]) for r in cursor.fetchall()}
-        cursor.execute("SELECT * FROM companies")
+        cursor.execute("""
+            SELECT c.company, c.link,
+                   e.jobs_element AS jobs_el,
+                   e.titles_element AS titles_el,
+                   e.links_element AS links_el
+            FROM companies c
+            JOIN elements e ON e.platform = c.platform
+        """)
         companies = cursor.fetchall()
     except Exception as e:
         print(f"[ERROR] Failed to connect to database: {e}")
