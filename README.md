@@ -50,7 +50,7 @@ Run the following SQL:
 CREATE TABLE companies (
     company TEXT NOT NULL,
     link TEXT NOT NULL,
-    type TEXT NOT NULL,
+    platform TEXT NOT NULL,
     UNIQUE(company, link, type)
 );
 
@@ -60,6 +60,14 @@ CREATE TABLE seen (
     link TEXT NOT NULL,
     date TEXT NOT NULL,
     UNIQUE(company, title, link, date)
+);
+
+CREATE TABLE elements (
+    platform TEXT NOT NULL,
+    jobs_element TEXT NOT NULL,
+    titles_element TEXT NOT NULL,
+    links_element TEXT NOT NULL,
+    UNIQUE(platform, jobs_element, titles_element, links_element)
 );
 ```
 

@@ -31,10 +31,10 @@ async def gather_all_jobs(companies):
 
         tasks = [
             asyncio.create_task(
-                run_scraper(SCRAPER_MAP[c["type"]], c["company"], c["link"], context)
+                run_scraper(SCRAPER_MAP[c["platform"]], c["company"], c["link"], context)
             )
             for c in companies
-            if c["type"] in SCRAPER_MAP
+            if c["platform"] in SCRAPER_MAP
         ]
 
         if not tasks:
