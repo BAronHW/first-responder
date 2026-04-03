@@ -44,4 +44,6 @@ async def scrape(
         print(f"[SKIP] {company} timed out — skipping.")
         jobs = []
 
+    await page.close()
+
     return jobs
