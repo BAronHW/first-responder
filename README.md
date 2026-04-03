@@ -48,26 +48,29 @@ Run the following SQL:
 
 ```sql
 CREATE TABLE companies (
+    id BIGSERIAL PRIMARY KEY,
     company TEXT NOT NULL,
     link TEXT NOT NULL,
     platform TEXT NOT NULL,
-    UNIQUE(company, link, type)
+    UNIQUE(id, company, link, platform)
 );
 
 CREATE TABLE seen (
+    id BIGSERIAL PRIMARY KEY,
     company TEXT NOT NULL,
     title TEXT NOT NULL,
     link TEXT NOT NULL,
     date TEXT NOT NULL,
-    UNIQUE(company, title, link, date)
+    UNIQUE(id, company, title, link, date)
 );
 
 CREATE TABLE elements (
+    id BIGSERIAL PRIMARY KEY,
     platform TEXT NOT NULL,
     jobs_element TEXT,
     titles_element TEXT,
     links_element TEXT,
-    UNIQUE(platform, jobs_element, titles_element, links_element)
+    UNIQUE(id, platform, jobs_element, titles_element, links_element)
 );
 ```
 
