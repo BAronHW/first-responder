@@ -1,6 +1,6 @@
 # Ashby
 
-from playwright.async_api import async_playwright, TimeoutError
+from playwright.async_api import TimeoutError
 from filter.filters import filter_title
 
 

@@ -1,6 +1,6 @@
 # Workday
 
-TimeoutError
+from playwright.async_api import TimeoutError
 from filter.filters import filter_title
 
 
