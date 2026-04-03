@@ -120,7 +120,7 @@ filter/filters.py
 
 ## Adding Companies
 
-Use `docs/COMPANIES.md` to track company career pages.
+Use `docs/companies.md` to track company career pages.
 
 Quick ways to find them:
 
