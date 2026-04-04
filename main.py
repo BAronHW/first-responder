@@ -10,10 +10,9 @@ from playwright.async_api import async_playwright
 
 load_dotenv()
 
-SEMAPHORE = asyncio.Semaphore(4)
-
 
 async def run_scraper(company, context):
+    SEMAPHORE = asyncio.Semaphore(4)
     async with SEMAPHORE:
         return await scrape(
             company["company"],
@@ -30,10 +29,7 @@ async def gather_all_jobs(companies):
         browser = await p.chromium.launch(headless=True)
         context = await browser.new_context()
         try:
-            tasks = [
-                asyncio.create_task(run_scraper(c, context))
-                for c in companies
-            ]
+            tasks = [asyncio.create_task(run_scraper(c, context)) for c in companies]
 
             if not tasks:
                 return []
@@ -62,7 +58,9 @@ async def main():
     DATABASE_URL = os.getenv("DATABASE_URL")
 
     # Queries
-    delete_seen_from_date_query = "DELETE FROM seen WHERE \"date\"::date < CURRENT_DATE - INTERVAL '2 months'"
+    delete_seen_from_date_query = (
+        "DELETE FROM seen WHERE \"date\"::date < CURRENT_DATE - INTERVAL '2 months'"
+    )
     seen_query = "SELECT company, title, link FROM seen"
     get_data_query = """
             SELECT c.company, c.link,
@@ -72,7 +70,7 @@ async def main():
             FROM companies c
             JOIN elements e ON e.platform = c.platform
         """
-    
+
     try:
         con = psycopg.connect(DATABASE_URL, row_factory=psycopg.rows.dict_row)
         cursor = con.cursor()

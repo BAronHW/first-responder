@@ -5,13 +5,8 @@ from filter.filters import filter_title
 
 
 async def scrape(
-    company: str,
-    link: str,
-    jobs_el: str,
-    titles_el: str,
-    links_el: str,
-    context
-    ) -> list:
+    company: str, link: str, jobs_el: str, titles_el: str, links_el: str, context
+) -> list:
 
     print(f"[INFO] Scraping {company}.")
 
@@ -22,7 +17,9 @@ async def scrape(
         try:
             await page.wait_for_selector(jobs_el, timeout=4000)
         except:
-            await page.reload(wait_until="domcontentloaded") # Reloading page if it doesn't load properly
+            await page.reload(
+                wait_until="domcontentloaded"
+            )  # Reloading page if it doesn't load properly
             await page.wait_for_selector(jobs_el, timeout=4000)
 
         jobs_locator = page.locator(jobs_el)
