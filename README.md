@@ -139,3 +139,4 @@ You can bulk insert using a generated SQL statement, or add them one by one in t
 * Smarter filtering using an LLM (job description matching)
 * SMS notifications (Twilio)
 * Local-first mode (local LLM + database)
+* test
